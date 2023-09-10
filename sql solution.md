@@ -10,7 +10,6 @@ limit 5
 2. write a query to print highest spend month and amount spent in that month for each card type.
 
 ```sql
-
 with cte as (
 select month(date) as mth, year(date) as yr
 ,sum(amount) over (partition by month(date),year(date)) as amt from cct
@@ -84,3 +83,6 @@ FROM
 GROUP BY
     city;
     ```
+
+
+    tjgjkhfgjhgjhfg
