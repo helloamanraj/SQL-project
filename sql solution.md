@@ -82,7 +82,7 @@ FROM
     cte
 GROUP BY
     city;
-    ```
+```
 
 
   
