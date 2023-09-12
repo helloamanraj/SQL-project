@@ -85,10 +85,20 @@ GROUP BY
 ```
 
 
-6- write a query to find percentage contribution of spends by females for each expense type
+6. write a query to find percentage contribution of spends by females for each expense type
 
 ```sql
 select exp_type,
 round(100*(sum(case when gender='F' then amount else 0 end)/ sum(amount)),2) as percent_contribution from cct
 group by exp_type
+```
+
+8.
+```sql
+select city,sum(amount)/count(*) as ratio
+from cct
+where DAYOFWEEK(date) in (1,7)
+group by city
+order by ratio desc
+limit 1;
 ```
