@@ -129,3 +129,30 @@ group by city
 order by ratio desc
 limit 1;
 ```
+
+
+9.which city took least number of days to reach its 500th transaction after the first transaction in that city 
+
+
+
+```sql
+WITH cte AS (
+  SELECT
+    *,
+    MIN(date) OVER (PARTITION BY city ORDER BY date) AS start_date,
+    ROW_NUMBER() OVER (PARTITION BY city ORDER BY date) AS rw
+  FROM cct
+)
+
+SELECT
+  *,
+  city,
+  CASE
+    WHEN rw <= 500 THEN DATEDIFF(date, start_date)
+    ELSE 0
+  END AS days_to_500
+FROM cte
+WHERE rw = 500
+order by days_to_500 asc
+limit 1
+```
