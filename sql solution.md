@@ -92,6 +92,33 @@ select exp_type,
 round(100*(sum(case when gender='F' then amount else 0 end)/ sum(amount)),2) as percent_contribution from cct
 group by exp_type
 ```
+7. which card and expense type combination saw highest month over month growth in Jan-2014
+
+```sql
+WITH cte AS (
+  SELECT
+    card_type,
+    exp_type,
+    YEAR(date) AS yt,
+    MONTH(date) AS mt,
+    SUM(amount) AS total_spend
+  FROM cct
+  WHERE (YEAR(date) = 2014 AND MONTH(date) = 1) OR (YEAR(date) = 2013 AND MONTH(date) = 12) -- Filter for January 2014 and December 2013 data
+  GROUP BY card_type, exp_type, YEAR(date), MONTH(date)
+)
+SELECT
+  card_type,
+  exp_type,
+  SUM(CASE WHEN mt = 1 THEN total_spend ELSE 0 END) AS january_spend,
+  SUM(CASE WHEN mt = 12 THEN total_spend ELSE 0 END) AS december_spend,
+  (SUM(CASE WHEN mt = 1 THEN total_spend ELSE 0 END) - SUM(CASE WHEN mt = 12 THEN total_spend ELSE 0 END)) AS growth,
+ (100*(SUM(CASE WHEN mt = 1 THEN total_spend ELSE 0 END) - SUM(CASE WHEN mt = 12 THEN total_spend ELSE 0 END)) / SUM(CASE WHEN mt = 12 THEN total_spend ELSE 0 END) ) as GrowthMOM
+FROM cte
+GROUP BY card_type, exp_type
+ORDER BY growth DESC
+LIMIT 1;```
+
+
 
 8.
 ```sql
