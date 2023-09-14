@@ -143,7 +143,6 @@ WITH cte AS (
     ROW_NUMBER() OVER (PARTITION BY city ORDER BY date) AS rw
   FROM cct
 )
-
 SELECT
   *,
   city,
